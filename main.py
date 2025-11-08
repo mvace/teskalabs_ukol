@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 
 # Načíst data
 
@@ -11,10 +12,13 @@ container_list = []
 for container in data:
     container_dict = {}
     container_dict["name"] = container["name"]
+    
     container_dict["created_at"] = container["created_at"]
     container_dict["status"] = container["status"]
 
     ip_addresses = []
+
+    # Ne vždy jsou data ve "state" přítomna a klíče "cpu" či "memory" chybí
     if container["state"] is None:
         container_dict["cpu_usage"] = None
         container_dict["memory_usage"] = None
