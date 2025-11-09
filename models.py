@@ -10,6 +10,7 @@ class Base(DeclarativeBase):
 
 class Container(Base):
     __tablename__ = "container"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     status: Mapped[str] = mapped_column(String())
