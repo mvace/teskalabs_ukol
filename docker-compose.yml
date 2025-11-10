@@ -12,6 +12,21 @@ services:
       - "${POSTGRES_PORT}:5432" 
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  app:
+      build: .
+      container_name: lxc_parser_app
+      environment:
+        DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
+      volumes:
+        - .:/app
+      command: sh -c "alembic upgrade head"
+      depends_on:
+        db:
+          condition: service_healthy
 volumes:
   postgres_data:
