@@ -12,7 +12,7 @@ container_list = []
 for container in data:
     container_dict = {}
     container_dict["name"] = container["name"]
-    
+
     container_dict["created_at"] = container["created_at"]
     container_dict["status"] = container["status"]
 

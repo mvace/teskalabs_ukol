@@ -2,6 +2,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String, DateTime, Integer
 from sqlalchemy.dialects.postgresql import ARRAY
 from datetime import datetime, timezone
+from typing import Optional
 
 
 class Base(DeclarativeBase):
@@ -14,6 +15,6 @@ class Container(Base):
     name: Mapped[str] = mapped_column(String())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     status: Mapped[str] = mapped_column(String())
-    cpu_usage: Mapped[int] = mapped_column(Integer())
-    memory_usage: Mapped[int] = mapped_column(Integer())
+    cpu_usage: Mapped[Optional[int]] = mapped_column(Integer(), nullable=True)
+    memory_usage: Mapped[Optional[int]] = mapped_column(Integer(), nullable=True)
     ip_addresses: Mapped[list[str]] = mapped_column(ARRAY(String))

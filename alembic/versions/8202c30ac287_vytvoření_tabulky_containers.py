@@ -1,8 +1,8 @@
 """Vytvoření tabulky containers
 
-Revision ID: 4b386d60529f
+Revision ID: 8202c30ac287
 Revises: 
-Create Date: 2025-11-10 07:19:25.670307
+Create Date: 2025-11-10 11:17:36.078059
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '4b386d60529f'
+revision: str = '8202c30ac287'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,8 +26,8 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('status', sa.String(), nullable=False),
-    sa.Column('cpu_usage', sa.Integer(), nullable=False),
-    sa.Column('memory_usage', sa.Integer(), nullable=False),
+    sa.Column('cpu_usage', sa.Integer(), nullable=True),
+    sa.Column('memory_usage', sa.Integer(), nullable=True),
     sa.Column('ip_addresses', postgresql.ARRAY(sa.String()), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
