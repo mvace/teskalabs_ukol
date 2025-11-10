@@ -1,5 +1,5 @@
 import os
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from dotenv import load_dotenv
 from models import Base
 
@@ -13,8 +13,3 @@ engine = create_async_engine(DATABASE_URL, echo=True)
 
 # Budu potřebovat nastavit session
 async_session_factory = async_sessionmaker(engine, expire_on_commit=False)
-
-
-async def get_db() -> AsyncSession:
-    async with async_session_factory() as session:
-        yield session

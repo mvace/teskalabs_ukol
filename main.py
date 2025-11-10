@@ -1,37 +1,40 @@
 import json
+import aiofiles
 from datetime import datetime, timezone
+from models import Container
+
 
 # Načíst data
+async def load_data(file):
+    async with aiofiles.open(file, mode="r") as f:
+        data = await f.read()
+    return json.loads(data)
 
-with open("sample-data.json", "r") as file:
-    data = json.load(file)
 
-# vytvořit seznam, který bude obsahovat slovník s požadovanými daty k danému kontejneru
-container_list = []
-
-for container in data:
-    container_dict = {}
-    container_dict["name"] = container["name"]
-
-    container_dict["created_at"] = container["created_at"]
-    container_dict["status"] = container["status"]
-
+# vytvořit instanci modelu Container, který bude obsahovat vyparsovaná data z json k jednotlivým kontejnerům
+async def parse_container_data(container):
+    name = container.get("name")
+    created_at = container.get("created_at")
+    status = container.get("status")
+    cpu_usage = None
+    memory_usage = None
     ip_addresses = []
 
-    # Ne vždy jsou data ve "state" přítomna a klíče "cpu" či "memory" chybí
-    if container["state"] is None:
-        container_dict["cpu_usage"] = None
-        container_dict["memory_usage"] = None
-    else:
-        container_dict["cpu_usage"] = container["state"]["cpu"]["usage"]
-        container_dict["memory_usage"] = container["state"]["memory"]["usage"]
+    state = container.get("state")
+    if state:
+        cpu_usage = container.get("cpu_usage")
+        memory_usage = container.get("memory_usage")
+        network = state.get("network", [])
+        for device_details in network.values():
+            for ip_addr_info in device_details["addresses"]:
+                ip_addresses.append(ip_addr_info["address"])
 
-        for device_name, device_details in container["state"]["network"].items():
-            for data in device_details["addresses"]:
-                ip_addresses.append(data["address"])
+    return Container(
+        name=name,
+        created_at=created_at,
+        status=status,
+        cpu_usage=cpu_usage,
+        memory_usage=memory_usage,
+        ip_addresses=ip_addresses,
+    )
 
-    container_dict["ip_addresses"] = ip_addresses
-    container_list.append(container_dict)
-
-for container in container_list:
-    print(container)
