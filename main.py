@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from models import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 from db import async_session_factory, engine
+from utils import convert_to_utc_timestamp
 
 
 # Načíst data
@@ -18,9 +19,7 @@ async def load_data(file):
 async def parse_container_data(container):
     name = container.get("name")
     date_string = container.get("created_at")
-    dt = datetime.fromisoformat(date_string)
-    created_at = int(dt.timestamp())
-
+    created_at = convert_to_utc_timestamp(date_string)
     status = container.get("status")
     cpu_usage = None
     memory_usage = None
