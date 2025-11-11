@@ -16,7 +16,7 @@ async def load_data(file):
 
 
 # vytvořit instanci modelu Container, který bude obsahovat vyparsovaná data z json k jednotlivým kontejnerům
-async def parse_container_data(container):
+def parse_container_data(container):
     name = container.get("name")
     date_string = container.get("created_at")
     created_at = convert_to_utc_timestamp(date_string)
@@ -51,7 +51,7 @@ async def process_and_prepare_data(session, filepath):
     raw_data_list = await load_data(filepath)
     containers_to_add = []
     for data in raw_data_list:
-        new_container = await parse_container_data(data)
+        new_container = parse_container_data(data)
         containers_to_add.append(new_container)
 
     session.add_all(containers_to_add)
