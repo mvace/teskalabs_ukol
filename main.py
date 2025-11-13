@@ -3,7 +3,6 @@ import asyncio
 import aiofiles
 from datetime import datetime, timezone
 from models import Container
-from sqlalchemy.ext.asyncio import AsyncSession
 from db import async_session_factory, engine
 from utils import convert_to_utc_timestamp
 
